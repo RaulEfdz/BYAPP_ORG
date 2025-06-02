@@ -110,6 +110,26 @@ export async function PUT(
       );
     }
 
+    // Validate budget and guests types if present
+    if (
+      updateData.budget !== undefined &&
+      typeof updateData.budget !== "number"
+    ) {
+      return NextResponse.json(
+        { error: "El campo budget debe ser un número" },
+        { status: 400 }
+      );
+    }
+    if (
+      updateData.guests !== undefined &&
+      !Number.isInteger(updateData.guests)
+    ) {
+      return NextResponse.json(
+        { error: "El campo guests debe ser un entero" },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await supabase
       .from("Event")
       .update(updateData)

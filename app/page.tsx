@@ -52,7 +52,7 @@ export default async function HomePage() {
         </p>
         <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 mb-10">
           <Link
-            href="/api/auth/signin"
+            href="/login"
             className="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300 ease-in-out transform hover:scale-105 inline-block"
           >
             Iniciar Sesión

@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#1E40AF' // Distinctive blue color for Organizers app
+        primary: '#FF4500' // Intense orange color for EVENT FIRE
       }
     }
   },
