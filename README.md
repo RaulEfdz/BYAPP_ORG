@@ -1,6 +1,6 @@
-# FIRE-BY Organizers App
+# FIREOrganizers App
 
-This is the Next.js application for the Organizers of the FIRE-BY platform.
+This is the Next.js application for the Organizers of the FIREplatform.
 
 It is built with TypeScript, Next.js, Tailwind CSS, and uses NextAuth.js for authentication with Supabase as backend.
 

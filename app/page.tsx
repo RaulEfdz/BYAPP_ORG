@@ -43,7 +43,7 @@ export default async function HomePage() {
     <main className="flex flex-col items-center justify-center min-h-screen p-4 text-center bg-white">
       <div className="max-w-2xl">
         <h1 className="text-5xl font-bold text-primary mb-6">
-          FIRE-BY Organizers: Tu Centro de Comando para Eventos Exitosos
+          FIREOrganizers: Tu Centro de Comando para Eventos Exitosos
         </h1>
         <p className="text-xl text-gray-700 mb-10">
           Planifica, gestiona y ejecuta tus eventos con herramientas intuitivas,
@@ -129,7 +129,7 @@ export default async function HomePage() {
         </div>
       </div>
       <footer className="absolute bottom-0 left-0 right-0 p-4 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} FIRE-BY Platform
+        © {new Date().getFullYear()} FIREPlatform
       </footer>
     </main>
   );

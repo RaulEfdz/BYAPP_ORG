@@ -1,4 +1,4 @@
-// Prisma schema for FIRE-BY Organizers App
+// Prisma schema for FIREOrganizers App
 
 generator client {
   provider = "prisma-client-js"

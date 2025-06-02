@@ -1,4 +1,4 @@
-# FIRE-BY Organizers App Development Checklist
+# FIREOrganizers App Development Checklist
 
 Este documento contiene la lista de tareas y funcionalidades que se irán creando para la aplicación de Organizadores FIRE-BY. Se marcarán conforme se vayan completando.
 

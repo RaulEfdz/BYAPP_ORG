@@ -1,4 +1,4 @@
-# Especificaciones para la App de Organizadores FIRE-BY (MVP)
+# Especificaciones para la App de Organizadores FIRE(MVP)
 
 **Objetivo General:** Construir una aplicación web Next.js para **Organizadores de Eventos** que les permita planificar, gestionar y ejecutar eventos de manera eficiente, utilizando la plataforma FIRE-BY.
 
