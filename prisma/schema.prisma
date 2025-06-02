@@ -1,0 +1,100 @@
+// Prisma schema for FIRE-BY Organizers App
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String         @id @default(uuid())
+  name           String?
+  email          String         @unique
+  hashedPassword String?
+  role           String
+  events         Event[]        @relation("UserEvents")
+  notifications  Notification[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  Task           Task[]
+}
+
+model Event {
+  id        String              @id @default(uuid())
+  userId    String
+  user      User                @relation(fields: [userId], references: [id], name: "UserEvents")
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  location  String?
+  client    String?
+  eventType String?
+  budget    Float?
+  guests    Int?
+  status    String?
+  tasks     Task[]
+  providers EventProviderLink[]
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model Task {
+  id                String              @id @default(uuid())
+  eventId           String
+  event             Event               @relation(fields: [eventId], references: [id])
+  name              String
+  description       String?
+  dueDate           DateTime?
+  status            String
+  assignedToId      String?
+  assignedTo        User?               @relation(fields: [assignedToId], references: [id])
+  providerId        String?
+  provider          Provider?           @relation(fields: [providerId], references: [id])
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  EventProviderLink EventProviderLink[]
+}
+
+model Provider {
+  id          String              @id @default(uuid())
+  name        String
+  serviceType String?
+  email       String?
+  phone       String?
+  location    String?
+  notes       String?
+  tasks       Task[]
+  eventLinks  EventProviderLink[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+model EventProviderLink {
+  id         String   @id @default(uuid())
+  eventId    String
+  event      Event    @relation(fields: [eventId], references: [id])
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id])
+  taskId     String?
+  task       Task?    @relation(fields: [taskId], references: [id])
+  agreedCost Float?
+  quoteUrl   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  message   String
+  type      String
+  read      Boolean  @default(false)
+  date      DateTime
+  link      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
