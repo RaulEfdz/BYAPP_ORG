@@ -1,26 +1,49 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/route";
 import { supabase } from "../../../lib/supabaseClient";
 
 export async function GET(request: NextRequest) {
-  // Get user session from request headers or cookies (implementation depends on auth setup)
-  // For now, fetch all events (to be restricted later)
-  const { data, error } = await supabase
-    .from("Event")
-    .select("*")
-    .order("startDate", { ascending: true });
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    }
+    if (session.user.role !== "ORGANIZER") {
+      return NextResponse.json({ error: "Prohibido" }, { status: 403 });
+    }
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const { data, error } = await supabase
+      .from("Event")
+      .select("*")
+      .eq("userId", session.user.id)
+      .order("startDate", { ascending: true });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(data);
 }
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    }
+    if (session.user.role !== "ORGANIZER") {
+      return NextResponse.json({ error: "Prohibido" }, { status: 403 });
+    }
+
     const body = await request.json();
 
-    // Validate required fields
     const {
       name,
       startDate,
@@ -31,30 +54,33 @@ export async function POST(request: NextRequest) {
       budget,
       guests,
       status,
-      userId,
     } = body;
 
-    if (!name || !startDate || !endDate || !userId) {
+    if (!name || !startDate || !endDate) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Campos requeridos faltantes: name, startDate, endDate" },
         { status: 400 }
       );
     }
 
-    const { data, error } = await supabase.from("Event").insert([
-      {
-        userId,
-        name,
-        startDate,
-        endDate,
-        location,
-        client,
-        eventType,
-        budget,
-        guests,
-        status,
-      },
-    ]);
+    const { data, error } = await supabase
+      .from("Event")
+      .insert([
+        {
+          name,
+          startDate,
+          endDate,
+          location: location ?? null,
+          client: client ?? null,
+          eventType: eventType ?? null,
+          budget: budget ?? null,
+          guests: guests ?? null,
+          status: status ?? null,
+          userId: session.user.id,
+        },
+      ])
+      .select()
+      .single();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -63,7 +89,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
     return NextResponse.json(
-      { error: "Invalid request body" },
+      { error: "Solicitud inválida o error interno" },
       { status: 400 }
     );
   }
